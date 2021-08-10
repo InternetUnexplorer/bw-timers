@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bedwars Timers</title>
+    <meta name="author" content="InternetUnexplorer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A simple tool to track resource spawning in Bedwars"
+    />
+    <link rel="stylesheet" href="css/furtive.min.css" />
+  </head>
+
+  <body>
+    <div class="p2 txt--center">
+      <h1>Bedwars Timers</h1>
+    </div>
+
+    <!-- Stopwatch section -->
+    <div class="bg--off-white">
+      <section class="measure p2">
+        <div class="txt--center">
+          <code class="h1 bold" id="stopwatch-time">00:00.000</code>
+        </div>
+
+        <input
+          class="btn--green"
+          id="stopwatch-button"
+          type="submit"
+          value="Start"
+        />
+      </section>
+    </div>
+
+    <!-- Counter section -->
+    <section class="measure">
+      <div class="grd my2">
+        <div class="grd-row">
+          <!-- Emerald counter -->
+          <div class="grd-row-col-3-6--md p1">
+            <div class="px1 txt--center">
+              <h2 class="my0">
+                <strong class="fnt--green" id="emerald-counter">0</strong>
+                <span id="emerald-counter-label">Emeralds</span>
+              </h2>
+              <p class="my0">
+                <code class="bold fnt--green" id="emerald-time">--:--</code>
+                until next emerald
+              </p>
+              <div class="py1 px2">
+                <select id="emerald-num-generators">
+                  <option value="2" selected="selected">2 generators</option>
+                  <option value="3">3 generators</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!---->
+
+          <!-- Diamond counter -->
+          <div class="grd-row-col-3-6--md p1">
+            <div class="px1 txt--center">
+              <h2 class="my0">
+                <strong class="fnt--blue" id="diamond-counter">0</strong>
+                <span id="diamond-counter-label">Diamonds</span>
+              </h2>
+              <p class="my0">
+                <code class="bold fnt--blue" id="diamond-time">--:--</code>
+                until next diamond
+              </p>
+              <div class="py1 px2">
+                <select id="diamond-num-generators">
+                  <option value="1" selected="selected">1 generator</option>
+                  <option value="2" selected="selected">2 generators</option>
+                  <option value="4">4 generators</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="txt--center p2">
+      Made by
+      <a href="https://github.com/InternetUnexplorer" title="Alex">Alex</a> and
+      <a href="https://github.com/j1h7e7" title="Jeremy">Jeremy</a>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="js/index.mjs" type="module"></script>
+  </body>
+</html>

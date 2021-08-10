@@ -1,0 +1,8 @@
+{
+  "name": "bw-timers",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:InternetUnexplorer/bw-timers",
+  "author": "InternetUnexplorer <internetunexplorer@gmail.com>",
+  "license": "MIT"
+}
