@@ -26,33 +26,43 @@ export class SpawnTableRow {
 
 export class SpawnTable {
   constructor(rows) {
+    // Assert that there is at least one row.
     assert(rows.length > 0, "there must be at least one row");
+    // Assert that the first row starts at 0s.
+    assert(
+      rows[0].time === 0,
+      "the first row must have time = 0",
+      rows[0].name
+    );
 
-    rows.forEach((row, index) => {
-      if (index === 0) {
-        assert(row.time === 0, "the first row must have time = 0", row.name);
-      } else {
-        // Assert that row times are strictly increasing.
-        assert(
-          row.time > rows[index - 1].time,
-          "row times must be strictly increasing",
-          row.name
-        );
-        // Assert that row intervals are strictly decreasing.
-        assert(
-          row.interval < rows[index - 1].interval,
-          "row intervals must be strictly decreasing",
-          row.name
-        );
-        // Assert that the duration a row is active is divisible by its
-        // interval.
-        // This is to ensure that the active row does not change in the middle
-        // of the current interval.
-        assert(
-          (row.time - rows[index - 1].time) % rows[index - 1].interval === 0,
-          "the duration a row is active must be divisible by its interval",
-          row.name
-        );
+    // Assert that row times are strictly increasing and row intervals are
+    // strictly decreasing.
+    rows.slice(1).forEach((row, index) => {
+      assert(
+        row.time > rows[index].time,
+        "row times must be strictly increasing",
+        row.name
+      );
+      assert(
+        row.interval < rows[index].interval,
+        "row intervals must be strictly decreasing",
+        row.name
+      );
+    });
+
+    // Round the row start times up so they each starts when the interval of the
+    // previous row finishes.
+    rows.slice(1).forEach((row, index) => {
+      const prev = rows[index];
+
+      let duration = row.time - prev.time;
+      if (duration <= 0) {
+        duration = 1;
+        row.time = prev.time + 1;
+      }
+
+      if (duration % prev.interval !== 0) {
+        row.time += prev.interval - (duration % prev.interval);
       }
     });
 
