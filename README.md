@@ -19,9 +19,9 @@ will need to edit them first.
 
 ### Configuration Format
 
-The profiles in `profiles.json` are structured as follows:
+The profiles in `profiles.json` look like this:
 
-```json
+```jsonc
 {
   "Profile Name": {
     "emeraldST": [
