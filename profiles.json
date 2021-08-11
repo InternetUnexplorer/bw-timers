@@ -1,0 +1,19 @@
+{
+  "Example Profile 1": {
+    "emeraldST": [
+      { "name": "Emerald I", "time": 0, "interval": 60 },
+      { "name": "Emerald II", "time": 120, "interval": 30 },
+      { "name": "Emerald III", "time": 240, "interval": 15 }
+    ],
+    "diamondST": [
+      { "name": "Diamond I", "time": 0, "interval": 60 },
+      { "name": "Diamond II", "time": 50, "interval": 30 },
+      { "name": "Diamond III", "time": 180, "interval": 15 }
+    ]
+  },
+
+  "Example Profile 2": {
+    "emeraldST": [{ "name": "Emerald I", "time": 0, "interval": 15 }],
+    "diamondST": [{ "name": "Diamond I", "time": 0, "interval": 15 }]
+  }
+}

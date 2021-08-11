@@ -1,23 +1,27 @@
-import { UPDATE_INTERVAL_MS, EMERALD_ST, DIAMOND_ST } from "./config.mjs";
+import { loadProfiles } from "./config.mjs";
+import { Timer } from "./utils.mjs";
 import { formatTime } from "./utils.mjs";
 
 ////////////////////////////////////////////////
 
-function updateStopwatch(millisElapsed) {
+let profiles = null;
+
+////////////////////////////////////////////////
+
+function updateControls(secsElapsed) {
+  const isRunning = secsElapsed !== null;
   // Update time
-  $("#stopwatch-time").text(formatTime(millisElapsed || 0, true));
+  $("#stopwatch-time").text(formatTime(secsElapsed || 0));
+  // Update profile selector
+  $("#profile-selector").prop("disabled", isRunning);
   // Update button
-  const isRunning = millisElapsed !== null;
   const newClass = isRunning ? "btn--gray" : "btn--green";
   const newValue = isRunning ? "Reset" : "Start";
   $("#stopwatch-button").attr("class", newClass);
   $("#stopwatch-button").attr("value", newValue);
 }
 
-function updateCounters(millisElapsed) {
-  const secsElapsed =
-    millisElapsed !== null ? Math.floor(millisElapsed / 1000) : null;
-
+function updateCounters(secsElapsed) {
   function updateCounter(spawnTable, idPrefix, labelSingular, labelPlural) {
     // Get the number of generators.
     const numGenerators = parseInt($(`#${idPrefix}-num-generators`).val());
@@ -32,58 +36,73 @@ function updateCounters(millisElapsed) {
     );
 
     // Update the amount of time before the next spawn.
-    const millisRemaining =
-      secsElapsed !== null
-        ? spawnTable.getNextSpawnSec(secsElapsed) * 1000
-        : null;
-    const timeText = $(`#${idPrefix}-time`).text(
-      formatTime(millisRemaining, false)
-    );
+    const secsRemaining =
+      secsElapsed !== null ? spawnTable.getNextSpawnSec(secsElapsed) : null;
+    const timeText = $(`#${idPrefix}-time`).text(formatTime(secsRemaining));
   }
 
-  updateCounter(EMERALD_ST, "emerald", "Emerald", "Emeralds");
-  updateCounter(DIAMOND_ST, "diamond", "Diamond", "Diamonds");
+  // Get the current profile.
+  const currentProfile = profiles[parseInt($("#profile-selector").val())];
+
+  updateCounter(currentProfile.emeraldST, "emerald", "Emerald", "Emeralds");
+  updateCounter(currentProfile.diamondST, "diamond", "Diamond", "Diamonds");
 }
 
 ////////////////////////////////////////////////
 
-let isRunning = false;
-let startTime = null;
-let intervalId = null;
+let timer = null;
+let secsElapsed = null;
 
 function update() {
-  const millisElapsed = isRunning ? Date.now() - startTime : null;
-  updateStopwatch(millisElapsed);
-  updateCounters(millisElapsed);
+  updateControls(secsElapsed);
+  updateCounters(secsElapsed);
 }
 
 function start() {
-  isRunning = true;
-  startTime = Date.now();
-  intervalId = setInterval(update, UPDATE_INTERVAL_MS);
+  timer = new Timer((millisElapsed) => {
+    secsElapsed = Math.round(millisElapsed / 1000);
+    update();
+  }, 1000);
+  secsElapsed = 0;
   update();
 }
 
 function reset() {
-  clearInterval(intervalId);
-  isRunning = false;
-  startTime = null;
+  timer.stop();
+  timer = null;
+  secsElapsed = null;
   update();
 }
 
 ////////////////////////////////////////////////
+
+// Load the profiles from profiles.json.
+try {
+  profiles = await loadProfiles();
+} catch (error) {
+  $("#config-error-message").show();
+  throw error;
+}
+
+// Add the loaded profiles to the profile selector.
+profiles.forEach((profile, index) => {
+  $("#profile-selector").append(
+    $("<option>", {
+      value: index,
+      text: profile.name,
+    })
+  );
+});
 
 $("#emerald-num-generators").change(update);
 $("#diamond-num-generators").change(update);
 
 $("#stopwatch-button").on("click", () => {
-  if (isRunning) {
-    if (confirm("Are you sure you want to reset the timers?")) {
-      reset();
-    } else {
-      update();
-    }
+  if (timer !== null) {
+    reset();
   } else {
     start();
   }
 });
+
+update();

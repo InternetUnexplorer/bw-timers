@@ -18,19 +18,40 @@
       <h1>Bedwars Timers</h1>
     </div>
 
-    <!-- Stopwatch section -->
+    <!-- Config error message section -->
+    <div
+      class="bg--red fnt--white txt--center p1"
+      id="config-error-message"
+      hidden="hidden"
+    >
+      <strong
+        >An error occurred loading <code>profiles.json</code>! Check the console
+        for more info.</strong
+      >
+    </div>
+
+    <!-- Stopwatch and profile selector section -->
     <div class="bg--off-white">
       <section class="measure p2">
-        <div class="txt--center">
-          <code class="h1 bold" id="stopwatch-time">00:00.000</code>
+        <div class="grd">
+          <div class="grd-row">
+            <!-- Stopwatch time -->
+            <div class="grd-row-col-4-6--md txt--center">
+              <code class="h1 bold" id="stopwatch-time">00:00</code>
+            </div>
+            <div class="grd-row-col-2-6--md">
+              <!-- Profile selector -->
+              <select id="profile-selector" disabled="disabled"></select>
+              <!-- Stopwatch button -->
+              <input
+                class="btn--green"
+                id="stopwatch-button"
+                type="submit"
+                value="Start"
+              />
+            </div>
+          </div>
         </div>
-
-        <input
-          class="btn--green"
-          id="stopwatch-button"
-          type="submit"
-          value="Start"
-        />
       </section>
     </div>
 

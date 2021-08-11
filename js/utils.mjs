@@ -2,17 +2,35 @@ export function zeroPad(n, length) {
   return (1e15 + n + "").slice(-length);
 }
 
-export function formatTime(millis, showMillis) {
-  if (millis !== null) {
-    const secs = Math.floor(millis / 1000);
-    const mins = Math.floor(secs / 60);
-    const millisText = zeroPad(millis % 1000, 3);
-    const secsText = zeroPad(secs % 60, 2);
-    const minsText = zeroPad(mins, 2);
-    return showMillis
-      ? `${minsText}:${secsText}.${millisText}`
-      : `${minsText}:${secsText}`;
+export function formatTime(seconds) {
+  if (seconds !== null) {
+    const secsText = zeroPad(seconds % 60, 2);
+    const minsText = zeroPad(Math.floor(seconds / 60), 2);
+    return `${minsText}:${secsText}`;
   } else {
-    return showMillis ? "--:--.---" : "--:--";
+    return "--:--";
+  }
+}
+
+export class Timer {
+  constructor(fn, interval) {
+    this.fn = fn;
+    this.interval = interval;
+    this.startTime = Date.now();
+    this.timeoutId = this.resetTimeout();
+  }
+
+  stop() {
+    clearTimeout(this.timeoutId);
+  }
+
+  resetTimeout() {
+    const timeElapsed = Date.now() - this.startTime;
+    const nextTimeout = 1000 - (timeElapsed % 1000);
+
+    return setTimeout(() => {
+      this.fn(Date.now() - this.startTime);
+      this.timeoutId = this.resetTimeout();
+    }, nextTimeout);
   }
 }
